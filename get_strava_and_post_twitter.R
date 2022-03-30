@@ -31,7 +31,8 @@ get_data <- function(type = "recentActivities", id=id){
   
 }
 
-# get recent activity
+print("get recent activity list")
+
 recent_act <- get_data(type = "recentActivities", id = usr_id)
 
 data <- recent_act %>% 
@@ -49,8 +50,7 @@ data$startDateLocal <- as.Date(data$startDateLocal, "%B %d, %Y")
 
 data["startDateLocal"][is.na(data["startDateLocal"])] <- Sys.Date()
 
-#insert data to database
-#make connection to database
+print("connect to db")
 
 drv <- dbDriver("PostgreSQL")
 con <- dbConnect(drv,
@@ -66,7 +66,9 @@ last_id <- dbGetQuery(con, query)
 
 if(is.na(last_id)){
   last_id <- 0
-  }
+}
+
+print(paste0("last id in db", last_id, sep = " "))
 
 recent_data <- data %>%
   filter(id > last_id)
@@ -82,8 +84,9 @@ kambing_token <- rtweet::create_token(
   access_secret =   Sys.getenv("STRAVA_TWITTER_ACCESS_TOKEN_SECRET")
 )
 
-l <- length(recent_data$id)
+print("get strava detail route and plot map")
 
+l <- length(recent_data$id)
 if(l > 0){
   for(k in 1:l){
     # most recent activity detail
