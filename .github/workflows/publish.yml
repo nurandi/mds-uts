@@ -1,8 +1,9 @@
 name: strava_to_tweet
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '0 2,8,17 * * *'
+    - cron: '15 */3 * * *'
 
 jobs:
   publish-data:
