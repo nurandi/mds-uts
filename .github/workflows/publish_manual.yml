@@ -28,8 +28,8 @@ jobs:
         run: Rscript -e 'install.packages("jsonlite", dependencies = TRUE)'
       - name: Install rtweet package
         run: Rscript -e 'install.packages("rtweet", dependencies = TRUE)'
-      - name: Install tidyverse package
-        run: Rscript -e 'install.packages("tidyverse", dependencies = TRUE)'
+      - name: Install dplyr package
+        run: Rscript -e 'install.packages("dplyr", dependencies = TRUE)'
       - name: Install ggplot2 package
         run: Rscript -e 'install.packages("ggplot2", dependencies = TRUE)'
       - name: Install gganimate package
