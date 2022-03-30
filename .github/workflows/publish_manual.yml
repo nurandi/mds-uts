@@ -1,4 +1,4 @@
-name: strava_to_tweet
+name: strava_to_tweet_manual
 
 on:
   workflow_dispatch
