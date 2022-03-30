@@ -1,7 +1,3 @@
-#get_activity_strava_save.r
-#mengambil data strava untuk pertama kalinya
-#dan menyimpan pada database
-
 library(rvest)
 library(xml2)
 library(jsonlite)
@@ -11,9 +7,6 @@ library(rtweet)
 library(gganimate)
 library(ggplot2)
 
-print("start...")
-
-usr_id <- Sys.getenv("STRAVA_ID")
 
 get_data <- function(type = "recentActivities", id=id){
 
@@ -33,8 +26,7 @@ get_data <- function(type = "recentActivities", id=id){
   
 }
 
-print("get recent activity list")
-
+usr_id <- Sys.getenv("STRAVA_ID")
 recent_act <- get_data(type = "recentActivities", id = usr_id)
 
 data <- recent_act %>% 
@@ -42,17 +34,12 @@ data <- recent_act %>%
   select(id, name, type, distance, startDateLocal, elevation, movingTime)
   
 data <- as.data.frame(data)
-
-
-#convert data
 data$distance <- as.integer(gsub('.{3}$', '', data$distance))
 data$elevation <- gsub('.{2}$', '', data$elevation)
 data$elevation <- as.integer(gsub(",", "", data$elevation))
 data$startDateLocal <- as.Date(data$startDateLocal, "%B %d, %Y")
 
 data["startDateLocal"][is.na(data["startDateLocal"])] <- Sys.Date()
-
-print("connect to db")
 
 drv <- dbDriver("PostgreSQL")
 con <- dbConnect(drv,
@@ -70,14 +57,11 @@ if(is.na(last_id)){
   last_id <- 0
 }
 
-print(paste0("last id in db", last_id, sep = " "))
-
 recent_data <- data %>%
   filter(id > last_id)
 
 dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
 
-## Create Twitter token
 kambing_token <- rtweet::create_token(
   app = "kambingBot",
   consumer_key =    Sys.getenv("STRAVA_TWITTER_CONSUMER_API_KEY"),
@@ -86,12 +70,10 @@ kambing_token <- rtweet::create_token(
   access_secret =   Sys.getenv("STRAVA_TWITTER_ACCESS_TOKEN_SECRET")
 )
 
-print("get strava detail route and plot map")
-
 l <- length(recent_data$id)
 if(l > 0){
   for(k in 1:l){
-    # most recent activity detail
+
     id_activity <- recent_data[k,1]
     recent_act_detail <- get_data(type = "activity", id = recent_data[k,1])
     
@@ -124,7 +106,6 @@ if(l > 0){
         "Time: ", movingTime, "\n"
       )
       
-      ## Post the image to Twitter
       rtweet::post_tweet(
         status = status_details,
         media = "anime.gif",
