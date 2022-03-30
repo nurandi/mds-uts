@@ -11,6 +11,8 @@ library(rtweet)
 library(gganimate)
 library(ggplot2)
 
+print("start...")
+
 usr_id <- Sys.getenv("STRAVA_ID")
 
 get_data <- function(type = "recentActivities", id=id){
