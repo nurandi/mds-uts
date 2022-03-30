@@ -50,11 +50,11 @@ tryCatch({
   drv <- dbDriver("PostgreSQL")
   print("Connecting to Database.")
   con <- dbConnect(drv,
-                   dbname = "emelexrq", 
-                   host = "arjuna.db.elephantsql.com",
-                   port = 5432,
-                   user = "emelexrq",
-                   password = "ArOGKL6aDZAr0L77o_BXoIIAM5LoCtq0")
+                 dbname = Sys.getenv("STRAVA_ELEPHANT_SQL_DBNAME"), 
+                 host = Sys.getenv("STRAVA_ELEPHANT_SQL_HOST"),
+                 port = 5432,
+                 user = Sys.getenv("STRAVA_ELEPHANT_SQL_USER"),
+                 password = Sys.getenv("STRAVA_ELEPHANT_SQL_PASSWORD"))
   print("Database Connected!")
 },
 error=function(cond) {
