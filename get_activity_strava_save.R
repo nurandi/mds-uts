@@ -34,6 +34,12 @@ data <- recent_act %>% select(id,name,type,distance,startDateLocal,elevation,mov
 data <- as.data.frame(data)
 
 
+#convert data
+data$distance <- as.integer(gsub('.{3}$', '', data$distance))
+data$elevation <- gsub('.{2}$', '', data$elevation)
+data$elevation <- as.integer(gsub(",", "", data$elevation))
+data$startDateLocal <- as.Date(data$startDateLocal, "%B %d, %Y")
+
 #jika startDateLocal = NA diisi dengan tanggal hari ini
 data["startDateLocal"][is.na(data["startDateLocal"])] <- Sys.Date()
 
