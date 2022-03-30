@@ -62,17 +62,19 @@ con <- dbConnect(drv,
                  password = Sys.getenv("STRAVA_ELEPHANT_SQL_PASSWORD"))
 
 
-query <- 'SELECT MAX("id") FROM "public"."activity" '
-last_id <- dbGetQuery(con, query)
+# query <- 'SELECT MAX("id") FROM "public"."activity" '
+# last_id <- dbGetQuery(con, query)
 
-if(is.na(last_id)){
-  last_id <- 0
-}
+# if(is.na(last_id)){
+#  last_id <- 0
+# }
 
-recent_data <- data %>%
-  filter(id > last_id)
+# recent_data <- data %>%
+#  filter(id > last_id)
 
-dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
+recent_data <- data
+
+# dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
 
 
 ## Create Twitter token
