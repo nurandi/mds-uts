@@ -11,8 +11,6 @@ library(rtweet)
 library(gganimate)
 library(ggplot2)
 
-print("step1")
-
 usr_id <- Sys.getenv("STRAVA_ID")
 
 get_data <- function(type = "recentActivities", id=id){
@@ -49,13 +47,10 @@ data$elevation <- gsub('.{2}$', '', data$elevation)
 data$elevation <- as.integer(gsub(",", "", data$elevation))
 data$startDateLocal <- as.Date(data$startDateLocal, "%B %d, %Y")
 
-#jika startDateLocal = NA diisi dengan tanggal hari ini
 data["startDateLocal"][is.na(data["startDateLocal"])] <- Sys.Date()
 
 #insert data to database
 #make connection to database
-
-print("step2")
 
 drv <- dbDriver("PostgreSQL")
 con <- dbConnect(drv,
@@ -66,21 +61,17 @@ con <- dbConnect(drv,
                  password = Sys.getenv("STRAVA_ELEPHANT_SQL_PASSWORD"))
 
 
-# query <- 'SELECT MAX("id") FROM "public"."activity" '
-# last_id <- dbGetQuery(con, query)
+query <- 'SELECT MAX("id") FROM "public"."activity" '
+last_id <- dbGetQuery(con, query)
 
-# if(is.na(last_id)){
-#  last_id <- 0
-# }
+if(is.na(last_id)){
+  last_id <- 0
+  }
 
-# recent_data <- data %>%
-#  filter(id > last_id)
+recent_data <- data %>%
+  filter(id > last_id)
 
-recent_data <- data
-
-# dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
-
-print("step3")
+dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
 
 ## Create Twitter token
 kambing_token <- rtweet::create_token(
