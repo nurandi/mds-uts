@@ -111,9 +111,11 @@ for(k in 1:l){
     df$distance <- distance_stream
     df$altitude <- altitude
     
-    p <- ggplot(df, aes(x=V2,y=V1)) + geom_path() + geom_point(aes(group = distance, color = altitude)) +
-      scale_color_gradient2() +
-      transition_reveal(along = distance)
+    p <- ggplot(df, aes(x=V2, y=V1)) + 
+      geom_path() + 
+      geom_point(aes(group = distance)) +
+      transition_reveal(along = distance) +
+      xlab("Longitude") + ylab("Latitude")
     
     p <- animate(p,renderer = gifski_renderer())
     anim_save("anime.gif", animation = p)
