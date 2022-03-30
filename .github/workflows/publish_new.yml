@@ -2,7 +2,7 @@ name: strava_to_tweet
 
 on:
   schedule:
-    - cron: '0 2,8,17 * * *'  # run every 10th minute
+    - cron: '0 2,8,17 * * *'
 
 jobs:
   publish-data:
