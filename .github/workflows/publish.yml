@@ -20,8 +20,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
+      - name: Install rvest package
+        run: Rscript -e 'install.packages("rvest", dependencies = TRUE)'
+      - name: Install xml2 package
+        run: Rscript -e 'install.packages("xml2", dependencies = TRUE)'
+      - name: Install jsonlite package
+        run: Rscript -e 'install.packages("jsonlite", dependencies = TRUE)'
       - name: Install rtweet package
-        run: Rscript -e 'install.packages("rtweet", dependencies = TRUE)'
+        run: Rscript -e 'install.packages("jsonlite", dependencies = TRUE)'
+      - name: Install tidyverse package
+        run: Rscript -e 'install.packages("tidyverse", dependencies = TRUE)'
       - name: Install ggplot2 package
         run: Rscript -e 'install.packages("ggplot2", dependencies = TRUE)'
       - name: Install gganimate package
@@ -29,4 +37,4 @@ jobs:
       - name: Install RPostgreSQL package
         run: Rscript -e 'install.packages("RPostgreSQL", dependencies = TRUE)'
       - name: Create and post tweet
-        run: Rscript publish.R
+        run: Rscript get_strava_and_post_twitter.R
