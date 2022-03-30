@@ -1,8 +1,8 @@
-name: Publish
+name: strava_to_tweet
 
 on:
   schedule:
-    - cron: '10 * * * *'  # run every 10th minute
+    - cron: '0 2,8,17 * * *'  # run every 10th minute
 
 jobs:
   publish-data:
@@ -27,7 +27,7 @@ jobs:
       - name: Install jsonlite package
         run: Rscript -e 'install.packages("jsonlite", dependencies = TRUE)'
       - name: Install rtweet package
-        run: Rscript -e 'install.packages("jsonlite", dependencies = TRUE)'
+        run: Rscript -e 'install.packages("rtweet", dependencies = TRUE)'
       - name: Install tidyverse package
         run: Rscript -e 'install.packages("tidyverse", dependencies = TRUE)'
       - name: Install ggplot2 package
