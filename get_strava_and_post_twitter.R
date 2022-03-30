@@ -27,9 +27,9 @@ get_data <- function(type = "recentActivities", id=id){
 }
 
 usr_id <- Sys.getenv("STRAVA_ID")
-recent_act <- get_data(type = "recentActivities", id = usr_id)
+data <- get_data(type = "recentActivities", id = usr_id)
 
-data <- recent_act %>% 
+data <- data %>% 
   filter(hasGps) %>%
   select(id, name, type, distance, startDateLocal, elevation, movingTime)
   
@@ -58,7 +58,7 @@ if(is.na(last_id)){
 }
 
 recent_data <- data %>%
-  filter(id > last_id)
+  filter(id > last_id[1,1])
 
 dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
 
