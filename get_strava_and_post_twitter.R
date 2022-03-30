@@ -111,7 +111,7 @@ for(k in 1:l){
     df$distance <- distance_stream
     df$altitude <- altitude
     
-    p <- ggplot(df, aes(x=V2,y=V1)) + geom_path() + geom_point(aes(group = distance, color = altitude)) +
+    p <- ggplot(df, aes(x=V2,y=V1)) + geom_path() + geom_point(aes(group = distance)) +
       scale_color_gradient2() +
       transition_reveal(along = distance)
     
