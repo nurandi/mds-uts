@@ -6,7 +6,7 @@ on:
 
 jobs:
   publish-data:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       STRAVA_ELEPHANT_SQL_DBNAME: ${{ secrets.STRAVA_ELEPHANT_SQL_DBNAME }}
       STRAVA_ELEPHANT_SQL_HOST: ${{ secrets.STRAVA_ELEPHANT_SQL_HOST }}
