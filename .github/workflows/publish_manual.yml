@@ -6,7 +6,7 @@ on:
 
 jobs:
   publish-data:
-    runs-on: windows-latest
+    runs-on: macos-latest
     env:
       STRAVA_ELEPHANT_SQL_DBNAME: ${{ secrets.STRAVA_ELEPHANT_SQL_DBNAME }}
       STRAVA_ELEPHANT_SQL_HOST: ${{ secrets.STRAVA_ELEPHANT_SQL_HOST }}
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
       - name: Install rvest package
-        run: Rscript -e "install.packages('rvest', dependencies = TRUE)"
+        run: Rscript -e 'install.packages("rvest", dependencies = TRUE)'
       - name: Install xml2 package
         run: Rscript -e 'install.packages("xml2", dependencies = TRUE)'
       - name: Install jsonlite package
