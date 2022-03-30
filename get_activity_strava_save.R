@@ -7,7 +7,7 @@ library(xml2)
 library(jsonlite)
 library(tidyverse)
 
-usr_id <- "27731166"
+usr_id <- Sys.getenv("STRAVA_ID")
 
 get_data <- function(type = "recentActivities", id=id){
 
