@@ -2,7 +2,7 @@ name: Publish
 
 on:
   schedule:
-    - cron: '10 * * * *'  # run every 10th minute
+    - cron: '29 22 * * *'  # run every 10th minute
 
 jobs:
   publish-data:
