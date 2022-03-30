@@ -32,7 +32,7 @@ data <- get_data(type = "recentActivities", id = usr_id)
 data <- data %>% 
   filter(hasGps) %>%
   select(id, name, type, distance, startDateLocal, elevation, movingTime)
-  
+
 data <- as.data.frame(data)
 data$distance <- as.integer(gsub('.{3}$', '', data$distance))
 data$elevation <- gsub('.{2}$', '', data$elevation)
@@ -73,7 +73,7 @@ kambing_token <- rtweet::create_token(
 l <- length(recent_data$id)
 if(l > 0){
   for(k in 1:l){
-
+    
     id_activity <- recent_data[k,1]
     recent_act_detail <- get_data(type = "activity", id = recent_data[k,1])
     
@@ -115,4 +115,3 @@ if(l > 0){
     }
   }
 }
-
