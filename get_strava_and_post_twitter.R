@@ -11,6 +11,8 @@ library(rtweet)
 library(gganimate)
 library(ggplot2)
 
+print("step1")
+
 usr_id <- Sys.getenv("STRAVA_ID")
 
 get_data <- function(type = "recentActivities", id=id){
@@ -53,6 +55,8 @@ data["startDateLocal"][is.na(data["startDateLocal"])] <- Sys.Date()
 #insert data to database
 #make connection to database
 
+print("step2")
+
 drv <- dbDriver("PostgreSQL")
 con <- dbConnect(drv,
                  dbname = Sys.getenv("STRAVA_ELEPHANT_SQL_DBNAME"), 
@@ -76,6 +80,7 @@ recent_data <- data
 
 # dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
 
+print("step3")
 
 ## Create Twitter token
 kambing_token <- rtweet::create_token(
