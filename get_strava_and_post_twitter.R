@@ -5,7 +5,7 @@
 library(rvest)
 library(xml2)
 library(jsonlite)
-library(tidyverse)
+library(dplyr)
 library(RPostgreSQL)
 library(rtweet)
 library(gganimate)
