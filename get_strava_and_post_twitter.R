@@ -53,7 +53,6 @@ data["startDateLocal"][is.na(data["startDateLocal"])] <- Sys.Date()
 #insert data to database
 #make connection to database
 
-
 drv <- dbDriver("PostgreSQL")
 con <- dbConnect(drv,
                  dbname = Sys.getenv("STRAVA_ELEPHANT_SQL_DBNAME"), 
@@ -87,47 +86,49 @@ kambing_token <- rtweet::create_token(
 
 l <- length(recent_data$id)
 
-for(k in 1:l){
-  # most recent activity detail
-  id_activity <- recent_data[k,1]
-  recent_act_detail <- get_data(type = "activity", id = recent_data[k,1])
-  
-  latlng <- recent_act_detail[["streams"]][["latlng"]]
-  distance_stream <- recent_act_detail[["streams"]][["distance"]]
-  altitude <- recent_act_detail[["streams"]][["altitude"]]
-  name <- recent_act_detail[["name"]]
-  distance <- recent_act_detail[["distance"]]
-  elevation <- recent_act_detail[["elevation"]]
-  movingTime <- recent_act_detail[["time"]]
-  
-  if(length(latlng)>0){
-    df <- as.data.frame(latlng)
-    df$distance <- distance_stream
-    df$altitude <- altitude
+if(l > 0){
+  for(k in 1:l){
+    # most recent activity detail
+    id_activity <- recent_data[k,1]
+    recent_act_detail <- get_data(type = "activity", id = recent_data[k,1])
     
-    p <- ggplot(df, aes(x=V2, y=V1)) + 
-      geom_path() + 
-      geom_point(aes(group = distance)) +
-      transition_reveal(along = distance) +
-      xlab("Longitude") + ylab("Latitude")
+    latlng <- recent_act_detail[["streams"]][["latlng"]]
+    distance_stream <- recent_act_detail[["streams"]][["distance"]]
+    altitude <- recent_act_detail[["streams"]][["altitude"]]
+    name <- recent_act_detail[["name"]]
+    distance <- recent_act_detail[["distance"]]
+    elevation <- recent_act_detail[["elevation"]]
+    movingTime <- recent_act_detail[["time"]]
     
-    p <- animate(p,renderer = gifski_renderer())
-    anim_save("anime.gif", animation = p)
-    
-    status_details <- paste0(
-      "Activity Name: ", name, "\n",
-      "Distance: ", distance, " \n",
-      "Elevation: ", elevation, " \n",
-      "Time: ", movingTime, "\n"
-    )
-    
-    ## Post the image to Twitter
-    rtweet::post_tweet(
-      status = status_details,
-      media = "anime.gif",
-      token = kambing_token
-    )
-    
+    if(length(latlng)>0){
+      df <- as.data.frame(latlng)
+      df$distance <- distance_stream
+      df$altitude <- altitude
+      
+      p <- ggplot(df, aes(x=V2, y=V1)) + 
+        geom_path() + 
+        geom_point(aes(group = distance)) +
+        transition_reveal(along = distance) +
+        xlab("Longitude") + ylab("Latitude")
+      
+      p <- animate(p,renderer = gifski_renderer())
+      anim_save("anime.gif", animation = p)
+      
+      status_details <- paste0(
+        "Activity Name: ", name, "\n",
+        "Distance: ", distance, " \n",
+        "Elevation: ", elevation, " \n",
+        "Time: ", movingTime, "\n"
+      )
+      
+      ## Post the image to Twitter
+      rtweet::post_tweet(
+        status = status_details,
+        media = "anime.gif",
+        token = kambing_token
+      )
+      
+    }
   }
 }
 
