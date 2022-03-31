@@ -1,7 +1,3 @@
-#get_activity_strava_save.r
-#mengambil data strava untuk pertama kalinya
-#dan menyimpan pada database
-
 library(rvest)
 library(xml2)
 library(jsonlite)
@@ -11,9 +7,6 @@ library(rtweet)
 library(gganimate)
 library(ggplot2)
 
-print("step1")
-
-usr_id <- Sys.getenv("STRAVA_ID")
 
 get_data <- function(type = "recentActivities", id=id){
 
@@ -33,29 +26,20 @@ get_data <- function(type = "recentActivities", id=id){
   
 }
 
-# get recent activity
-recent_act <- get_data(type = "recentActivities", id = usr_id)
+usr_id <- Sys.getenv("STRAVA_ID")
+data <- get_data(type = "recentActivities", id = usr_id)
 
-data <- recent_act %>% 
+data <- data %>% 
   filter(hasGps) %>%
   select(id, name, type, distance, startDateLocal, elevation, movingTime)
-  
+
 data <- as.data.frame(data)
-
-
-#convert data
 data$distance <- as.integer(gsub('.{3}$', '', data$distance))
 data$elevation <- gsub('.{2}$', '', data$elevation)
 data$elevation <- as.integer(gsub(",", "", data$elevation))
 data$startDateLocal <- as.Date(data$startDateLocal, "%B %d, %Y")
 
-#jika startDateLocal = NA diisi dengan tanggal hari ini
 data["startDateLocal"][is.na(data["startDateLocal"])] <- Sys.Date()
-
-#insert data to database
-#make connection to database
-
-print("step2")
 
 drv <- dbDriver("PostgreSQL")
 con <- dbConnect(drv,
@@ -66,23 +50,18 @@ con <- dbConnect(drv,
                  password = Sys.getenv("STRAVA_ELEPHANT_SQL_PASSWORD"))
 
 
-# query <- 'SELECT MAX("id") FROM "public"."activity" '
-# last_id <- dbGetQuery(con, query)
+query <- 'SELECT MAX("id") FROM "public"."activity" '
+last_id <- dbGetQuery(con, query)
 
-# if(is.na(last_id)){
-#  last_id <- 0
-# }
+if(is.na(last_id)){
+  last_id <- 0
+}
 
-# recent_data <- data %>%
-#  filter(id > last_id)
+recent_data <- data %>%
+  filter(id > last_id[1,1])
 
-recent_data <- data
+dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
 
-# dbWriteTable(conn=con, name='activity', value=recent_data, append = TRUE, row.names = FALSE, overwrite=FALSE)    
-
-print("step3")
-
-## Create Twitter token
 kambing_token <- rtweet::create_token(
   app = "kambingBot",
   consumer_key =    Sys.getenv("STRAVA_TWITTER_CONSUMER_API_KEY"),
@@ -92,10 +71,9 @@ kambing_token <- rtweet::create_token(
 )
 
 l <- length(recent_data$id)
-
 if(l > 0){
   for(k in 1:l){
-    # most recent activity detail
+    
     id_activity <- recent_data[k,1]
     recent_act_detail <- get_data(type = "activity", id = recent_data[k,1])
     
@@ -128,7 +106,6 @@ if(l > 0){
         "Time: ", movingTime, "\n"
       )
       
-      ## Post the image to Twitter
       rtweet::post_tweet(
         status = status_details,
         media = "anime.gif",
@@ -138,4 +115,3 @@ if(l > 0){
     }
   }
 }
-

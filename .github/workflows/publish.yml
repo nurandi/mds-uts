@@ -1,12 +1,13 @@
-name: strava_to_tweet_manual
+name: strava_to_tweet
 
 on:
-  workflow_dispatch
-  
+  schedule:
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
 
 jobs:
   publish-data:
-    runs-on: macOS-latest
+    runs-on: macos-latest
     env:
       STRAVA_ELEPHANT_SQL_DBNAME: ${{ secrets.STRAVA_ELEPHANT_SQL_DBNAME }}
       STRAVA_ELEPHANT_SQL_HOST: ${{ secrets.STRAVA_ELEPHANT_SQL_HOST }}
@@ -37,4 +38,5 @@ jobs:
       - name: Install RPostgreSQL package
         run: Rscript -e 'install.packages("RPostgreSQL", dependencies = TRUE)'
       - name: Create and post tweet
-        run: Rscript get_strava_and_post_twitter.R
+        run: Rscript get_activity_strava_save.R
+        
