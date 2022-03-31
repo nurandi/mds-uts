@@ -6,6 +6,6 @@ Twitter bot [@ansa52bot](https://www.twitter.com/ansa52bot)'s source code. The b
 
 ## Flow chart
 
-![Flow chart](flow-chart.png "Flow chart")
+![Flow chart](flowchart.png "Flow chart")
 
 Bot triggered by cron scheduler every 3th hour.
