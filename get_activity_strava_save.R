@@ -106,6 +106,8 @@ if(l > 0){
         "Time: ", movingTime, "\n"
       )
       
+      print(paste("Posting to Twitter", name, sep = ": "))
+      
       rtweet::post_tweet(
         status = status_details,
         media = "anime.gif",
@@ -114,4 +116,7 @@ if(l > 0){
       
     }
   }
+  
+} else {
+	print("New activity not found. Nothing posted to Twitter!")
 }
